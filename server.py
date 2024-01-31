@@ -13,4 +13,4 @@ def netcat(hostname, port):
     s.close()
 
 print("STARTTTTTTT.")
-netcat("www.google.com", 443)
+netcat("database-1-instance-1.c6ralslvhwx7.us-east-1.rds.amazonaws.com", 3306)
