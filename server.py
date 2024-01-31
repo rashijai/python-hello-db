@@ -1,57 +1,63 @@
-from wsgiref.simple_server import make_server
-from pyramid.config import Configurator
-from pyramid.response import Response
-import os
-import boto3
-import mysql.connector
+# from wsgiref.simple_server import make_server
+# from pyramid.config import Configurator
+# from pyramid.response import Response
+# import os
+# import boto3
+# import mysql.connector
 
-import os
+# import os
 
-DATABASE_REGION = 'us-east-1'
-DATABASE_CERT = 'cert/us-east-1-bundle.pem'
-DATABASE_HOST = os.environ['DATABASE_HOST']
-DATABASE_PORT = os.environ['DATABASE_PORT']
-DATABASE_USER = os.environ['DATABASE_USER']
-DATABASE_NAME = os.environ['DATABASE_NAME']
 
-os.environ['LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN'] = '1'
+import telnetlib 
+  
+tn = telnetlib.Telnet("database-1-instance-1.c6ralslvhwx7.us-east-1.rds.amazonaws.com", 3306) 
+print (tn)
 
-PORT = int(os.environ.get('PORT'))
+# DATABASE_REGION = 'us-east-1'
+# DATABASE_CERT = 'cert/us-east-1-bundle.pem'
+# DATABASE_HOST = os.environ['DATABASE_HOST']
+# DATABASE_PORT = os.environ['DATABASE_PORT']
+# DATABASE_USER = os.environ['DATABASE_USER']
+# DATABASE_NAME = os.environ['DATABASE_NAME']
 
-rds = boto3.client('rds')
+# os.environ['LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN'] = '1'
 
-token = rds.generate_db_auth_token(
-        DBHostname=DATABASE_HOST,
-        Port=DATABASE_PORT,
-        DBUsername=DATABASE_USER,
-        Region=DATABASE_REGION)
+# PORT = int(os.environ.get('PORT'))
 
-mydb =  mysql.connector.connect(
-        host=DATABASE_HOST,
-        user=DATABASE_USER,
-        passwd=token,
-        port=DATABASE_PORT,
-        database=DATABASE_NAME,
-        ssl_ca=DATABASE_CERT)         
+# rds = boto3.client('rds')
 
-def all_books(request):
-    mycursor = mydb.cursor()
-    mycursor.execute('SELECT name, title, year FROM authors, books WHERE authors.authorId = books.authorId ORDER BY year')
-    title = 'Books'
-    message = '<html><head><title>' + title + '</title></head><body>'
-    message += '<h1>' + title + '</h1>'
-    message += '<ul>'
-    for (name, title, year) in mycursor:
-        message += '<li>' + name + ' - ' + title + ' (' + str(year) + ')</li>'
-    message += '</ul>'
-    message += '</body></html>'
-    return Response(message)
+# token = rds.generate_db_auth_token(
+#         DBHostname=DATABASE_HOST,
+#         Port=DATABASE_PORT,
+#         DBUsername=DATABASE_USER,
+#         Region=DATABASE_REGION)
 
-if __name__ == '__main__':
+# mydb =  mysql.connector.connect(
+#         host=DATABASE_HOST,
+#         user=DATABASE_USER,
+#         passwd=token,
+#         port=DATABASE_PORT,
+#         database=DATABASE_NAME,
+#         ssl_ca=DATABASE_CERT)         
 
-    with Configurator() as config:
-        config.add_route('all_books', '/')
-        config.add_view(all_books, route_name='all_books')
-        app = config.make_wsgi_app()
-    server = make_server('0.0.0.0', PORT, app)
-    server.serve_forever()
+# def all_books(request):
+#     mycursor = mydb.cursor()
+#     mycursor.execute('SELECT name, title, year FROM authors, books WHERE authors.authorId = books.authorId ORDER BY year')
+#     title = 'Books'
+#     message = '<html><head><title>' + title + '</title></head><body>'
+#     message += '<h1>' + title + '</h1>'
+#     message += '<ul>'
+#     for (name, title, year) in mycursor:
+#         message += '<li>' + name + ' - ' + title + ' (' + str(year) + ')</li>'
+#     message += '</ul>'
+#     message += '</body></html>'
+#     return Response(message)
+
+# if __name__ == '__main__':
+
+#     with Configurator() as config:
+#         config.add_route('all_books', '/')
+#         config.add_view(all_books, route_name='all_books')
+#         app = config.make_wsgi_app()
+#     server = make_server('0.0.0.0', PORT, app)
+#     server.serve_forever()
