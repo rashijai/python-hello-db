@@ -12,4 +12,5 @@ def netcat(hostname, port):
     print("Connection closed.")
     s.close()
 
+print("STARTTTTTTT.")
 netcat("www.google.com", 443)
