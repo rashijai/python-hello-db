@@ -1,3 +1,4 @@
 boto3
+telnetlib3
 pyramid==2.0
 mysql-connector-python
