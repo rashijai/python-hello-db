@@ -12,4 +12,4 @@ def netcat(hostname, port):
     print("Connection closed.")
     s.close()
 
-netcat("database-1-instance-1.c6ralslvhwx7.us-east-1.rds.amazonaws.com", 3306)
+netcat("google.com", 443)
