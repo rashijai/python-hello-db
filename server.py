@@ -18,27 +18,27 @@ os.environ['LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN'] = '1'
 
 PORT = int(os.environ.get('PORT'))
 
-rds = boto3.client('rds')
+rds = boto3.client('rds')   
 
-try:
-    token = rds.generate_db_auth_token(
+def all_books(request):
+    try:
+      token = rds.generate_db_auth_token(
         DBHostname=DATABASE_HOST,
         Port=DATABASE_PORT,
         DBUsername=DATABASE_USER,
         Region=DATABASE_REGION
-    )
-    mydb =  mysql.connector.connect(
+      )
+      mydb =  mysql.connector.connect(
         host=DATABASE_HOST,
         user=DATABASE_USER,
         passwd=token,
         port=DATABASE_PORT,
         database=DATABASE_NAME,
         ssl_ca=DATABASE_CERT
-    )
-except Exception as e:
-    print('Database connection failed due to {}'.format(e))          
-
-def all_books(request):
+      )
+    except Exception as e:
+      print('Database connection failed due to {}'.format(e))       
+        
     mycursor = mydb.cursor()
     mycursor.execute('SELECT name, title, year FROM authors, books WHERE authors.authorId = books.authorId ORDER BY year')
     title = 'Books'
